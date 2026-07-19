@@ -27,15 +27,14 @@ st.set_page_config(
 st.markdown("""
     <style>
         [data-testid="stAppViewContainer"] {
-            background-image: linear-gradient(rgba(255,255,255,0.92), rgba(255,255,255,0.92)), url('https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=1650&q=80');
-            background-size: cover;
-            background-position: center;
+            background: linear-gradient(180deg, #03132e, #071b40);
+            color: #f7f5f2;
             background-attachment: fixed;
         }
 
         [data-testid="stSidebar"] {
-            background-color: rgba(255,255,255,0.96);
-            backdrop-filter: blur(12px);
+            background: linear-gradient(180deg, #061732, #071b40);
+            color: #f7f5f2;
         }
 
         .block-container {

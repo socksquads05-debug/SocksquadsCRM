@@ -55,21 +55,14 @@ def inject_theme() -> None:
             }}
 
             [data-testid="stAppViewContainer"] {{
-                background:
-                    linear-gradient(180deg, rgba(3, 11, 24, 0.78), rgba(3, 11, 24, 0.72)),
-                    url("{background_uri}");
-                background-size: cover;
-                background-position: center top;
+                background: linear-gradient(180deg, #02112b, #051730);
+                color: #f7f5f2;
                 background-attachment: fixed;
             }}
 
             [data-testid="stSidebar"] > div:first-child {{
-                background:
-                    linear-gradient(180deg, rgba(7, 22, 47, 0.96), rgba(5, 15, 30, 0.98)),
-                    url("{background_uri}");
-                background-size: cover;
-                background-position: center;
-                border-right: 1px solid rgba(201, 166, 107, 0.2);
+                background: linear-gradient(180deg, #04142f, #071b40);
+                border-right: 1px solid rgba(255, 255, 255, 0.08);
             }}
 
             .block-container {{
@@ -162,28 +155,37 @@ def inject_theme() -> None:
             }}
 
             .sq-brand-panel {{
-                background:
-                    linear-gradient(180deg, rgba(7, 22, 47, 0.18), rgba(7, 22, 47, 0.08)),
-                    url("{panel_uri}");
-                background-size: cover;
-                background-position: center;
-                border: 1px solid rgba(201, 166, 107, 0.32);
+                background: rgba(2, 17, 45, 0.96);
+                border: 1px solid rgba(255, 255, 255, 0.1);
                 border-radius: 28px;
-                box-shadow: 0 18px 40px rgba(3, 11, 24, 0.25);
+                box-shadow: 0 18px 42px rgba(0, 0, 0, 0.32);
                 min-height: 260px;
                 overflow: hidden;
             }}
 
-            .sq-brand-logo {{
-                width: 84px;
-                height: 84px;
-                object-fit: cover;
-                border-radius: 12px;
-                border: 1px solid rgba(201, 166, 107, 0.18);
-                box-shadow: 0 8px 18px rgba(7,22,47,0.12);
-                float: right;
-                margin-left: 1rem;
-                margin-top: -10px;
+            .sq-login-logo {{
+                width: 108px;
+                height: 108px;
+                border-radius: 999px;
+                background: white;
+                color: #041329;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 2.5rem;
+                font-weight: 800;
+                margin: 0 auto 1rem auto;
+                border: 2px solid rgba(255, 255, 255, 0.2);
+            }}
+
+            .sq-brand-meta {{
+                padding: 1.4rem 1.35rem 1.35rem;
+                background: transparent;
+                color: white;
+                min-height: 260px;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
             }}
 
             .sq-brand-panel--compact {{
@@ -307,13 +309,11 @@ def inject_theme() -> None:
 
 def render_login_brand() -> None:
     """Display the branded login hero panel."""
-    # Include the brand image as a small logo to improve recognition and placement
-    logo_uri = _to_data_uri(BRAND_PANEL_IMAGE)
     st.markdown(
-        f"""
+        """
+        <div class="sq-login-logo">S</div>
         <div class="sq-brand-panel">
             <div class="sq-brand-meta">
-                <img class="sq-brand-logo" src="{logo_uri}" alt="Socksquads logo" />
                 <div class="sq-brand-kicker">Luxury sales command center</div>
                 <h1 class="sq-brand-title">Socksquads CRM</h1>
                 <div class="sq-brand-copy">
