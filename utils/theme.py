@@ -20,9 +20,16 @@ LOGO_IMAGE = BRAND_DIR / "logo.jpg"
 
 def _to_data_uri(image_path: Path) -> str:
     """Encode a local image as a base64 data URI for CSS use."""
-    encoded = base64.b64encode(image_path.read_bytes()).decode("ascii")
-    suffix = image_path.suffix.lower().lstrip(".") or "png"
-    return f"data:image/{suffix};base64,{encoded}"
+    try:
+        if not image_path or not image_path.exists() or not image_path.is_file():
+            return ""
+        encoded = base64.b64encode(image_path.read_bytes()).decode("ascii")
+        suffix = image_path.suffix.lower().lstrip(".") or "png"
+        return f"data:image/{suffix};base64,{encoded}"
+    except Exception:
+        # Be defensive on deploy where files may be missing; return empty string so
+        # callers can fall back gracefully instead of crashing the app.
+        return ""
 
 
 def inject_theme() -> None:
