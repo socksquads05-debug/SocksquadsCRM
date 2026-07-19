@@ -177,14 +177,20 @@ def inject_theme() -> None:
                 height: 120px;
                 border-radius: 50%;
                 background: #041329;
-                background-image: url("{logo_uri}");
-                background-repeat: no-repeat;
-                background-position: center;
-                background-size: 70%;
                 display: block;
                 margin: 0 auto 1.4rem auto;
                 border: 2px solid rgba(255, 255, 255, 0.14);
                 box-shadow: 0 12px 32px rgba(0, 0, 0, 0.24);
+            }}
+
+            .sq-login-img {{
+                width: 110px;
+                height: 110px;
+                display: block;
+                margin: 4px auto 0 auto;
+                border-radius: 50%;
+                object-fit: contain;
+                background: transparent;
             }}
 
             .sq-brand-meta {{
@@ -318,9 +324,13 @@ def inject_theme() -> None:
 
 def render_login_brand() -> None:
     """Display the branded login hero panel."""
+    # Prefer data-URI embedded logo; fall back to repository path when unavailable
+    logo_data = _to_data_uri(LOGO_IMAGE)
+    img_src = logo_data if logo_data else "assets/brand/logo.jpg"
+
     st.markdown(
-        """
-        <div class="sq-login-logo"></div>
+        f"""
+        <img class="sq-login-img" src="{img_src}" alt="Socksquads logo" />
         <div class="sq-brand-panel">
             <div class="sq-brand-meta">
                 <div class="sq-brand-kicker">Luxury sales command center</div>
