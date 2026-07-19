@@ -38,8 +38,13 @@ def show():
         st.subheader("Submit Today's Report")
         
         sheets = get_sheets_connector()
+        # Show clear guidance if sheets not connected
+        if not getattr(sheets, 'sheet', None):
+            st.error("Google Sheets not configured or the target spreadsheet was not found. Create the spreadsheet named in config or check credentials.")
+            st.info("The form will still allow local entry, but saving to Google Sheets will fail until fixed.")
         
-        with st.form("daily_report_form", clear_on_submit=True):
+        # Do not auto-clear the form on submit; only clear after a successful save
+        with st.form("daily_report_form", clear_on_submit=False):
             col1, col2 = st.columns(2)
             
             with col1:
@@ -118,30 +123,56 @@ def show():
                 use_container_width=True,
                 type="primary"
             )
-            
+
             if submitted:
-                if not retailer_name or not retailer_mobile or not area or not city:
-                    st.error("Please fill in all required fields (marked with *).")
-                else:
-                    report_data = {
-                        'date': str(report_date),
-                        'salesman': salesman_name,
-                        'retailer': retailer_name,
-                        'retailer_mobile': retailer_mobile,
-                        'area': area,
-                        'city': city,
-                        'order_quantity': int(order_quantity),
-                        'order_value': float(order_value),
-                        'collection': float(collection),
-                        'outstanding': float(outstanding),
-                        'next_visit': str(next_visit),
-                        'remarks': remarks
-                    }
-                    
-                    # Save to Google Sheets
-                    if sheets.save_sales_report(report_data):
-                        st.success("✓ Report submitted successfully!")
-                        st.balloons()
+                # Provide immediate feedback that the click was received
+                with st.spinner("Submitting report..."):
+                    if not retailer_name or not retailer_mobile or not area or not city:
+                        st.error("Please fill in all required fields (Retailer Name, Mobile, Area, City).")
+                    else:
+                        report_data = {
+                            'date': str(report_date),
+                            'salesman': salesman_name,
+                            'retailer': retailer_name,
+                            'retailer_mobile': retailer_mobile,
+                            'area': area,
+                            'city': city,
+                            'order_quantity': int(order_quantity),
+                            'order_value': float(order_value),
+                            'collection': float(collection),
+                            'outstanding': float(outstanding),
+                            'next_visit': str(next_visit),
+                            'remarks': remarks
+                        }
+
+                        # Attempt to save to Google Sheets
+                        saved = False
+                        try:
+                            saved = sheets.save_sales_report(report_data)
+                        except Exception as exc:
+                            st.error(f"Error while saving: {exc}")
+
+                        if saved:
+                            st.success("✓ Report submitted successfully and saved to Google Sheets!")
+                            st.balloons()
+                            # Clear only the fields we populated
+                            for key, val in {
+                                'retailer_name': '',
+                                'retailer_mobile': '',
+                                'area': '',
+                                'city': '',
+                                'order_qty': 0,
+                                'order_value': 0.0,
+                                'collection': 0.0,
+                                'outstanding': 0.0,
+                                'next_visit': datetime.now() + timedelta(days=7),
+                                'remarks': ''
+                            }.items():
+                                st.session_state[key] = val
+                            # Rerun so cleared values are reflected in the form
+                            st.experimental_rerun()
+                        else:
+                            st.error("Failed to save report to Google Sheets. Check the messages above for details and ensure the spreadsheet exists and the service account has write permission.")
     
     # Tab 2: My Performance
     with tab2:

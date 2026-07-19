@@ -8,6 +8,7 @@ import traceback
 
 import streamlit as st
 from utils.helpers import AuthenticationManager, initialize_session_state
+from utils.theme import inject_theme, render_login_brand, render_sidebar_brand
 from app_pages import dashboard, salesman, retailers, reports, analytics
 
 
@@ -16,8 +17,8 @@ logging.basicConfig(level=logging.INFO)
 
 # Page configuration
 st.set_page_config(
-    page_title="SockSquads CRM",
-    page_icon="🧦",
+    page_title="Socksquads CRM",
+    page_icon="S",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -66,16 +67,16 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+inject_theme()
+
 
 def login_page():
     """Display login page."""
     col1, col2, col3 = st.columns([1, 2, 1])
     
     with col2:
-        st.image("https://images.unsplash.com/photo-1520975974396-86c7f230db81?auto=format&fit=crop&w=400&q=80", width=220)
-        st.title("SockSquads CRM")
-        st.subheader("Luxury Socks Sales Dashboard")
-        st.markdown("---")
+        render_login_brand()
+        st.caption("Premium socks sales operations dashboard")
         
         with st.form("login_form"):
             username = st.text_input(
@@ -91,7 +92,7 @@ def login_page():
             )
             
             submitted = st.form_submit_button(
-                "🔓 Login",
+                "Log in",
                 use_container_width=True,
                 type="primary"
             )
@@ -106,25 +107,22 @@ def login_page():
                     st.success(f"Welcome, {user_data['name']}!")
                     st.rerun()
                 else:
-                    st.error("❌ Invalid username or password.")
+                    st.error("Invalid username or password.")
         
-        st.markdown("---")
-        st.info("For access, please contact your SockSquads administrator. Login credentials are not shown here for security reasons.")
+        st.info("For access, please contact your Socksquads administrator. Login credentials are not shown here for security reasons.")
 
 
 def main_app():
     """Display main application."""
+    user_data = st.session_state.user_data
+
     # Sidebar
     with st.sidebar:
-        st.title("🧦 SockSquads CRM")
-        
-        # User info
-        user_data = st.session_state.user_data
-        st.write(f"**{user_data['name']}** ({user_data['role'].upper()})")
+        render_sidebar_brand(user_data)
         st.markdown("---")
         
         # Navigation menu
-        st.subheader("📋 Menu")
+        st.subheader("Navigation")
         
         if AuthenticationManager.is_admin(user_data):
             # Admin menu
@@ -142,7 +140,7 @@ def main_app():
             ]
         
         current_page = st.radio(
-            "Navigate to:",
+            "Open page",
             menu_options,
             key="menu_radio"
         )
@@ -152,15 +150,15 @@ def main_app():
         st.markdown("---")
         
         # Logout button
-        if st.button("🔓 Logout", use_container_width=True, type="secondary"):
+        if st.button("Log out", use_container_width=True, type="secondary"):
             st.session_state.authenticated = False
             st.session_state.user_data = None
             st.session_state.current_page = 'Dashboard'
             st.rerun()
         
         st.markdown("---")
-        st.markdown("**SockSquads CRM v1.0**")
-        st.markdown("*Powered by Streamlit*")
+        st.markdown("**Socksquads CRM v1.0**")
+        st.caption("Luxury socks company workspace")
     
     # Main content
     page = st.session_state.current_page
@@ -168,7 +166,7 @@ def main_app():
     try:
         if page == "Dashboard":
             if not AuthenticationManager.is_admin(user_data):
-                st.error("🔒 Access Denied! Only admins can view the dashboard.")
+                st.error("Access denied. Only admins can view the dashboard.")
             else:
                 dashboard.show()
         
@@ -181,24 +179,24 @@ def main_app():
         
         elif page == "Retailers":
             if not AuthenticationManager.is_admin(user_data):
-                st.error("🔒 Access Denied! Only admins can manage retailers.")
+                st.error("Access denied. Only admins can manage retailers.")
             else:
                 retailers.show()
         
         elif page == "Reports":
             if not AuthenticationManager.is_admin(user_data):
-                st.error("🔒 Access Denied! Only admins can view reports.")
+                st.error("Access denied. Only admins can view reports.")
             else:
                 reports.show()
         
         elif page == "Analytics":
             if not AuthenticationManager.is_admin(user_data):
-                st.error("🔒 Access Denied! Only admins can view analytics.")
+                st.error("Access denied. Only admins can view analytics.")
             else:
                 analytics.show()
     
     except Exception as e:
-        st.error(f"❌ Error loading page: {str(e)}")
+        st.error(f"Error loading page: {str(e)}")
         st.info("Please refresh the page or contact support.")
 
 
@@ -215,7 +213,7 @@ def main():
             main_app()
     except Exception as exc:
         logging.exception("Unhandled exception in app")
-        st.title("⚠️ Application Error")
+        st.title("Application Error")
         st.error("A fatal error occurred while loading the application.")
         st.write("Please check the deployment logs and verify your Streamlit secrets configuration.")
         st.text(traceback.format_exc())
