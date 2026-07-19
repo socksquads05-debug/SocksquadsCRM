@@ -109,11 +109,16 @@ def inject_theme() -> None:
             .stDateInput > div > div,
             .stTextArea textarea,
             .stTextInput>div>div>input,
+            .stTextInput input,
+            div[data-testid="stTextInput"] input,
+            div[data-testid="stTextArea"] textarea,
             .stTextArea>div>div>textarea,
             .stNumberInput>div>div>input,
-            .stDateInput>div>div>input {{
+            div[data-testid="stNumberInput"] input,
+            .stDateInput>div>div>input,
+            div[data-testid="stDateInput"] input {{
                 background: #000000 !important;
-                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                border: 1px solid rgba(255, 255, 255, 0.12) !important;
                 border-radius: 12px !important;
                 color: #ffffff !important;
             }}
