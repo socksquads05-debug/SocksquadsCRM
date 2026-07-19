@@ -118,9 +118,9 @@ def inject_theme() -> None:
                 color: #ffffff !important;
             }}
 
-            /* Make labels and placeholders clearly visible on dark inputs */
-            label, .stTextInput label, .stDateInput label {{
-                color: #ffffff !important;
+            /* Make labels and placeholders clearly visible on form sections */
+            label, .stTextInput label, .stDateInput label, .stNumberInput label, .stSelectbox label {{
+                color: #0f2038 !important;
                 font-weight: 600;
             }}
 
