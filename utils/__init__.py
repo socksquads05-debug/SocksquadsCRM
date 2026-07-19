@@ -1,6 +1,5 @@
 """Utils module for SocksQuads CRM."""
 
-from .google_sheets import GoogleSheetsConnector, get_sheets_connector
 from .helpers import (
     AuthenticationManager,
     initialize_session_state,
@@ -19,8 +18,6 @@ from .charts import (
 )
 
 __all__ = [
-    'GoogleSheetsConnector',
-    'get_sheets_connector',
     'AuthenticationManager',
     'initialize_session_state',
     'format_currency',
