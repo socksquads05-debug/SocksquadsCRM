@@ -39,6 +39,16 @@ class AuthenticationManager:
             'password': 'amit123',  # CHANGE THIS IN PRODUCTION
             'role': 'salesman',
             'name': 'Amit Patel'
+        },
+        'asif': {
+            'password': 'asif@2024',  # CHANGE THIS IN PRODUCTION
+            'role': 'business_development_manager',
+            'name': 'Asif'
+        },
+        'wasim': {
+            'password': 'wasim@2024',  # CHANGE THIS IN PRODUCTION
+            'role': 'business_development_manager',
+            'name': 'Wasim'
         }
     }
     
@@ -85,6 +95,11 @@ class AuthenticationManager:
         return user_data and user_data.get('role') == 'salesman'
     
     @staticmethod
+    def is_business_development_manager(user_data: Dict) -> bool:
+        """Check if user is business development manager."""
+        return user_data and user_data.get('role') == 'business_development_manager'
+    
+    @staticmethod
     def add_user(username: str, password: str, name: str, role: str):
         """Add a new user to credentials."""
         AuthenticationManager.CREDENTIALS[username] = {
@@ -92,6 +107,11 @@ class AuthenticationManager:
             'role': role,
             'name': name
         }
+    
+    @staticmethod
+    def get_all_credentials() -> Dict:
+        """Return all credentials for reference (for secure sharing only)."""
+        return AuthenticationManager.CREDENTIALS.copy()
 
 
 def initialize_session_state():
