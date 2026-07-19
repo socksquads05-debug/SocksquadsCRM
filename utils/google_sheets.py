@@ -12,11 +12,13 @@ from typing import List, Dict, Optional
 import json
 import os
 
+from config import GOOGLE_SHEET_NAME, GOOGLE_SHEET_URL, GOOGLE_SPREADSHEET_ID
+
 
 class GoogleSheetsConnector:
     """Manages connections and operations with Google Sheets."""
     
-    def __init__(self, credentials_path: str = "credentials.json", sheet_name: str = "SocksQuads CRM"):
+    def __init__(self, credentials_path: str = "credentials.json", sheet_name: str = GOOGLE_SHEET_NAME):
         """
         Initialize Google Sheets connector.
         
@@ -26,6 +28,8 @@ class GoogleSheetsConnector:
         """
         self.credentials_path = credentials_path
         self.sheet_name = sheet_name
+        self.sheet_url = GOOGLE_SHEET_URL
+        self.spreadsheet_id = GOOGLE_SPREADSHEET_ID
         self.client = None
         self.sheet = None
         self._initialize_connection()
@@ -33,14 +37,19 @@ class GoogleSheetsConnector:
     def _load_credentials(self, scope):
         """Load Google credentials from Streamlit secrets or local file."""
         try:
-            # Try Streamlit secrets first
-            if hasattr(st, 'secrets') and st.secrets is not None:
-                secret_creds = st.secrets.get('google_credentials')
-                if secret_creds:
-                    if isinstance(secret_creds, str):
-                        secret_creds = json.loads(secret_creds)
-                    if isinstance(secret_creds, dict):
-                        return Credentials.from_service_account_info(secret_creds, scopes=scope)
+            # Try Streamlit secrets first, but fall back gracefully if secrets are unavailable.
+            if hasattr(st, 'secrets'):
+                try:
+                    secrets = st.secrets
+                    if secrets is not None:
+                        secret_creds = secrets.get('google_credentials')
+                        if secret_creds:
+                            if isinstance(secret_creds, str):
+                                secret_creds = json.loads(secret_creds)
+                            if isinstance(secret_creds, dict):
+                                return Credentials.from_service_account_info(secret_creds, scopes=scope)
+                except Exception:
+                    pass
 
             # Fallback to local credentials.json file
             if os.path.exists(self.credentials_path):
@@ -68,26 +77,42 @@ class GoogleSheetsConnector:
 
             self.client = gspread.authorize(credentials)
 
-            # Try to open or create the sheet
+            # Try to open the spreadsheet by ID first, then by URL, then by name
             try:
-                self.sheet = self.client.open(self.sheet_name)
-            except gspread.exceptions.SpreadsheetNotFound:
-                st.warning(f"Sheet '{self.sheet_name}' not found. Create it in Google Drive first.")
-                self.sheet = None
+                if self.spreadsheet_id:
+                    self.sheet = self.client.open_by_key(self.spreadsheet_id)
+                elif self.sheet_url:
+                    self.sheet = self.client.open_by_url(self.sheet_url)
+                else:
+                    self.sheet = self.client.open(self.sheet_name)
+            except Exception:
+                try:
+                    self.sheet = self.client.open(self.sheet_name)
+                except gspread.exceptions.SpreadsheetNotFound:
+                    st.warning(f"Sheet '{self.sheet_name}' not found. Create it in Google Drive first.")
+                    self.sheet = None
 
         except Exception as e:
             st.error(f"Error initializing Google Sheets: {str(e)}")
             self.sheet = None
     
     def _get_worksheet(self, name: str):
-        """Get a worksheet by name, create if it doesn't exist."""
+        """Get a worksheet by name, create if it doesn't exist. Fall back to the first sheet if creation is not allowed."""
         if not self.sheet:
             return None
         
         try:
             return self.sheet.worksheet(name)
         except gspread.exceptions.WorksheetNotFound:
-            return self.sheet.add_worksheet(name, rows=1000, cols=20)
+            try:
+                return self.sheet.add_worksheet(name, rows=1000, cols=20)
+            except Exception as exc:
+                if 'does not have permission' in str(exc).lower() or 'permission' in str(exc).lower():
+                    try:
+                        return self.sheet.sheet1
+                    except Exception:
+                        return None
+                raise
     
     def save_sales_report(self, report_data: Dict) -> bool:
         """
@@ -134,7 +159,11 @@ class GoogleSheetsConnector:
             return True
             
         except Exception as e:
-            st.error(f"Error saving to Google Sheets: {str(e)}")
+            message = str(e)
+            if 'permission' in message.lower() or 'forbidden' in message.lower():
+                st.error("Google Sheets write permission denied. Please share the spreadsheet with the service account as Editor: socksquads@socksquadscrm.iam.gserviceaccount.com")
+            else:
+                st.error(f"Error saving to Google Sheets: {message}")
             return False
     
     def save_retailer(self, retailer_data: Dict) -> bool:
@@ -182,7 +211,11 @@ class GoogleSheetsConnector:
             return True
             
         except Exception as e:
-            st.error(f"Error saving retailer: {str(e)}")
+            message = str(e)
+            if 'permission' in message.lower() or 'forbidden' in message.lower():
+                st.error("Google Sheets write permission denied. Please share the spreadsheet with the service account as Editor: socksquads@socksquadscrm.iam.gserviceaccount.com")
+            else:
+                st.error(f"Error saving retailer: {message}")
             return False
     
     def get_sales_reports(self) -> pd.DataFrame:
