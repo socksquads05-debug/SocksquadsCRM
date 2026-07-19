@@ -111,26 +111,26 @@ def inject_theme() -> None:
             .stTextInput>div>div>input,
             .stTextArea>div>div>textarea,
             .stNumberInput>div>div>input,
-            .stDateInput>div>div>input {
+            .stDateInput>div>div>input {{
                 background: #000000 !important;
                 border: 1px solid rgba(255, 255, 255, 0.08) !important;
                 border-radius: 12px !important;
                 color: #ffffff !important;
-            }
+            }}
 
             /* Make labels and placeholders clearly visible on dark inputs */
-            label, .stTextInput label, .stDateInput label {
+            label, .stTextInput label, .stDateInput label {{
                 color: #ffffff !important;
                 font-weight: 600;
-            }
+            }}
 
-            input::placeholder, textarea::placeholder {
+            input::placeholder, textarea::placeholder {{
                 color: rgba(255,255,255,0.60) !important;
-            }
+            }}
 
-            input, textarea {
+            input, textarea {{
                 color: #ffffff !important;
-            }
+            }}
 
             .stTabs [data-baseweb="tab-list"] {{
                 gap: 0.5rem;
