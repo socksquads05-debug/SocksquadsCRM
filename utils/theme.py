@@ -105,21 +105,29 @@ def inject_theme() -> None:
             div[data-baseweb="input"] > div,
             div[data-baseweb="select"] > div,
             .stDateInput > div > div,
-            .stTextArea textarea {{
-                background: #ffffff;
-                border: 1px solid rgba(16, 38, 77, 0.18);
-                border-radius: 12px;
-                color: var(--sq-copy);
+            .stTextArea textarea,
+            .stTextInput>div>div>input,
+            .stTextArea>div>div>textarea,
+            .stNumberInput>div>div>input,
+            .stDateInput>div>div>input {{
+                background: #ffffff !important;
+                border: 1px solid rgba(16, 38, 77, 0.18) !important;
+                border-radius: 12px !important;
+                color: var(--sq-copy) !important;
             }}
 
             /* Make labels and placeholders more readable */
             label, .stTextInput label, .stDateInput label {{
-                color: var(--sq-copy);
+                color: var(--sq-copy) !important;
                 font-weight: 600;
             }}
 
             input::placeholder, textarea::placeholder {{
-                color: rgba(24,38,60,0.45);
+                color: rgba(24,38,60,0.45) !important;
+            }}
+
+            input, textarea {{
+                color: #0f2038 !important;
             }}
 
             .stTabs [data-baseweb="tab-list"] {{

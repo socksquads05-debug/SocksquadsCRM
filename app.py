@@ -61,6 +61,20 @@ st.markdown("""
             background-color: rgba(255,255,255,0.95);
         }
 
+        .stTextInput>div>div>input,
+        .stNumberInput>div>div>input,
+        .stTextArea>div>div>textarea,
+        .stDateInput>div>div>input {
+            background: #ffffff !important;
+            color: #0e203b !important;
+        }
+
+        .stTextInput>div>div>input::placeholder,
+        .stTextArea>div>div>textarea::placeholder,
+        .stDateInput>div>div>input::placeholder {
+            color: rgba(14, 32, 59, 0.4) !important;
+        }
+
         .stButton>button {
             border-radius: 999px;
         }
@@ -114,15 +128,17 @@ def login_page():
 
 def main_app():
     """Display main application."""
-    user_data = st.session_state.user_data
-
     # Sidebar
     with st.sidebar:
-        render_sidebar_brand(user_data)
+        st.title("🧦 SockSquads CRM")
+        
+        # User info
+        user_data = st.session_state.user_data
+        st.write(f"**{user_data['name']}** ({user_data['role'].upper()})")
         st.markdown("---")
         
         # Navigation menu
-        st.subheader("Navigation")
+        st.subheader("📋 Menu")
         
         if AuthenticationManager.is_admin(user_data):
             # Admin menu
@@ -140,7 +156,7 @@ def main_app():
             ]
         
         current_page = st.radio(
-            "Open page",
+            "Navigate to:",
             menu_options,
             key="menu_radio"
         )
@@ -150,15 +166,15 @@ def main_app():
         st.markdown("---")
         
         # Logout button
-        if st.button("Log out", use_container_width=True, type="secondary"):
+        if st.button("🔓 Logout", use_container_width=True, type="secondary"):
             st.session_state.authenticated = False
             st.session_state.user_data = None
             st.session_state.current_page = 'Dashboard'
             st.rerun()
         
         st.markdown("---")
-        st.markdown("**Socksquads CRM v1.0**")
-        st.caption("Luxury socks company workspace")
+        st.markdown("**SockSquads CRM v1.0**")
+        st.markdown("*Powered by Streamlit*")
     
     # Main content
     page = st.session_state.current_page
@@ -166,7 +182,7 @@ def main_app():
     try:
         if page == "Dashboard":
             if not AuthenticationManager.is_admin(user_data):
-                st.error("Access denied. Only admins can view the dashboard.")
+                st.error("🔒 Access Denied! Only admins can view the dashboard.")
             else:
                 dashboard.show()
         
@@ -179,24 +195,24 @@ def main_app():
         
         elif page == "Retailers":
             if not AuthenticationManager.is_admin(user_data):
-                st.error("Access denied. Only admins can manage retailers.")
+                st.error("🔒 Access Denied! Only admins can manage retailers.")
             else:
                 retailers.show()
         
         elif page == "Reports":
             if not AuthenticationManager.is_admin(user_data):
-                st.error("Access denied. Only admins can view reports.")
+                st.error("🔒 Access Denied! Only admins can view reports.")
             else:
                 reports.show()
         
         elif page == "Analytics":
             if not AuthenticationManager.is_admin(user_data):
-                st.error("Access denied. Only admins can view analytics.")
+                st.error("🔒 Access Denied! Only admins can view analytics.")
             else:
                 analytics.show()
     
     except Exception as e:
-        st.error(f"Error loading page: {str(e)}")
+        st.error(f"❌ Error loading page: {str(e)}")
         st.info("Please refresh the page or contact support.")
 
 
@@ -213,7 +229,7 @@ def main():
             main_app()
     except Exception as exc:
         logging.exception("Unhandled exception in app")
-        st.title("Application Error")
+        st.title("⚠️ Application Error")
         st.error("A fatal error occurred while loading the application.")
         st.write("Please check the deployment logs and verify your Streamlit secrets configuration.")
         st.text(traceback.format_exc())
