@@ -1,5 +1,5 @@
 """
-SocksQuads CRM - Sales Dashboard
+SockSquads CRM - Sales Dashboard
 Main application file with login and navigation
 """
 
@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.INFO)
 
 # Page configuration
 st.set_page_config(
-    page_title="SocksQuads CRM",
+    page_title="SockSquads CRM",
     page_icon="🧦",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -25,24 +25,43 @@ st.set_page_config(
 # Custom CSS for branding
 st.markdown("""
     <style>
+        [data-testid="stAppViewContainer"] {
+            background-image: linear-gradient(rgba(255,255,255,0.92), rgba(255,255,255,0.92)), url('https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=1650&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
         [data-testid="stSidebar"] {
-            background-color: #f0f2f6;
+            background-color: rgba(255,255,255,0.96);
+            backdrop-filter: blur(12px);
         }
-        
+
+        .block-container {
+            background-color: rgba(255,255,255,0.94) !important;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.09);
+            border-radius: 24px;
+            padding: 2rem 2rem 3rem;
+        }
+
         .stMetric {
-            background-color: white;
+            background-color: rgba(255,255,255,0.98);
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
         }
-        
+
         .login-container {
-            max-width: 400px;
+            max-width: 440px;
             margin: 50px auto;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            background-color: white;
+            padding: 32px;
+            border-radius: 22px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.14);
+            background-color: rgba(255,255,255,0.95);
+        }
+
+        .stButton>button {
+            border-radius: 999px;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -53,9 +72,9 @@ def login_page():
     col1, col2, col3 = st.columns([1, 2, 1])
     
     with col2:
-        st.image("https://via.placeholder.com/200?text=SocksQuads", width=200)
-        st.title("SocksQuads CRM")
-        st.subheader("Sales Dashboard")
+        st.image("https://images.unsplash.com/photo-1520975974396-86c7f230db81?auto=format&fit=crop&w=400&q=80", width=220)
+        st.title("SockSquads CRM")
+        st.subheader("Luxury Socks Sales Dashboard")
         st.markdown("---")
         
         with st.form("login_form"):
@@ -108,7 +127,7 @@ def main_app():
     """Display main application."""
     # Sidebar
     with st.sidebar:
-        st.title("🧦 SocksQuads CRM")
+        st.title("🧦 SockSquads CRM")
         
         # User info
         user_data = st.session_state.user_data
@@ -151,7 +170,7 @@ def main_app():
             st.rerun()
         
         st.markdown("---")
-        st.markdown("**SocksQuads CRM v1.0**")
+        st.markdown("**SockSquads CRM v1.0**")
         st.markdown("*Powered by Streamlit*")
     
     # Main content
