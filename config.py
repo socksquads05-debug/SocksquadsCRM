@@ -10,8 +10,8 @@ APP_DESCRIPTION = "Sales Dashboard for SocksQuads"
 
 # ==================== GOOGLE SHEETS SETTINGS ====================
 GOOGLE_SHEET_NAME = "SocksQuads CRM"
-GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1bRUqjcnfSsaAyZNZu0CMEqC4Q7X1Kx8kWpQFnJM_B7U/edit?usp=drive_link"
-GOOGLE_SPREADSHEET_ID = "1bRUqjcnfSsaAyZNZu0CMEqC4Q7X1Kx8kWpQFnJM_B7U"
+GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1dhcMRcfb7KHvKRGrT8i5yI6NVqIxD-vegI655CI9fok/edit?usp=sharing"
+GOOGLE_SPREADSHEET_ID = "1dhcMRcfb7KHvKRGrT8i5yI6NVqIxD-vegI655CI9fok"
 CREDENTIALS_FILE = "credentials.json"
 
 # ==================== USER ROLES ====================
