@@ -111,26 +111,26 @@ def inject_theme() -> None:
             .stTextInput>div>div>input,
             .stTextArea>div>div>textarea,
             .stNumberInput>div>div>input,
-            .stDateInput>div>div>input {{
-                background: #ffffff !important;
-                border: 1px solid rgba(16, 38, 77, 0.18) !important;
+            .stDateInput>div>div>input {
+                background: #000000 !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
                 border-radius: 12px !important;
-                color: var(--sq-copy) !important;
-            }}
+                color: #ffffff !important;
+            }
 
-            /* Make labels and placeholders more readable */
-            label, .stTextInput label, .stDateInput label {{
-                color: var(--sq-copy) !important;
+            /* Make labels and placeholders clearly visible on dark inputs */
+            label, .stTextInput label, .stDateInput label {
+                color: #ffffff !important;
                 font-weight: 600;
-            }}
+            }
 
-            input::placeholder, textarea::placeholder {{
-                color: rgba(24,38,60,0.45) !important;
-            }}
+            input::placeholder, textarea::placeholder {
+                color: rgba(255,255,255,0.60) !important;
+            }
 
-            input, textarea {{
-                color: #0f2038 !important;
-            }}
+            input, textarea {
+                color: #ffffff !important;
+            }
 
             .stTabs [data-baseweb="tab-list"] {{
                 gap: 0.5rem;
