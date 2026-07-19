@@ -15,6 +15,7 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 BRAND_DIR = ROOT_DIR / "assets" / "brand"
 BACKGROUND_IMAGE = BRAND_DIR / "luxury-background.png"
 BRAND_PANEL_IMAGE = BRAND_DIR / "brand-panel.png"
+LOGO_IMAGE = BRAND_DIR / "logo.jpg"
 
 
 def _to_data_uri(image_path: Path) -> str:
@@ -28,6 +29,7 @@ def inject_theme() -> None:
     """Apply the global Socksquads visual theme."""
     background_uri = _to_data_uri(BACKGROUND_IMAGE)
     panel_uri = _to_data_uri(BRAND_PANEL_IMAGE)
+    logo_uri = _to_data_uri(LOGO_IMAGE)
 
     st.markdown(
         f"""
@@ -168,10 +170,10 @@ def inject_theme() -> None:
                 height: 120px;
                 border-radius: 50%;
                 background: #041329;
-                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 140'%3E%3Cg fill='none' stroke='white' stroke-width='12' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M44.5 40C44.5 27.6 62 22.1 69.5 22.1C94.5 22.1 95.5 42.6 90.5 54.1C85.5 65.6 67 67.1 67 80.1C67 98.6 89.5 102.6 102.5 97.6C115.5 92.6 120.5 78.1 111 69.6'/%3E%3Cpath d='M95 40C118 52 122 80 116.5 93C110.5 107.5 92.5 112.5 75.5 106.5C58.5 100.5 53.5 82 56.5 66.5C59.5 50.5 74.5 38.5 95 40Z'/%3E%3C/g%3E%3C/svg%3E");
+                background-image: url("{logo_uri}");
                 background-repeat: no-repeat;
                 background-position: center;
-                background-size: 64%;
+                background-size: 70%;
                 display: block;
                 margin: 0 auto 1.4rem auto;
                 border: 2px solid rgba(255, 255, 255, 0.14);
