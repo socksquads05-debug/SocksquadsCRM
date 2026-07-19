@@ -164,18 +164,18 @@ def inject_theme() -> None:
             }}
 
             .sq-login-logo {{
-                width: 108px;
-                height: 108px;
-                border-radius: 999px;
-                background: white;
-                color: #041329;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 2.5rem;
-                font-weight: 800;
-                margin: 0 auto 1rem auto;
-                border: 2px solid rgba(255, 255, 255, 0.2);
+                width: 120px;
+                height: 120px;
+                border-radius: 50%;
+                background: #041329;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 140'%3E%3Cg fill='none' stroke='white' stroke-width='12' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M44.5 40C44.5 27.6 62 22.1 69.5 22.1C94.5 22.1 95.5 42.6 90.5 54.1C85.5 65.6 67 67.1 67 80.1C67 98.6 89.5 102.6 102.5 97.6C115.5 92.6 120.5 78.1 111 69.6'/%3E%3Cpath d='M95 40C118 52 122 80 116.5 93C110.5 107.5 92.5 112.5 75.5 106.5C58.5 100.5 53.5 82 56.5 66.5C59.5 50.5 74.5 38.5 95 40Z'/%3E%3C/g%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: 64%;
+                display: block;
+                margin: 0 auto 1.4rem auto;
+                border: 2px solid rgba(255, 255, 255, 0.14);
+                box-shadow: 0 12px 32px rgba(0, 0, 0, 0.24);
             }}
 
             .sq-brand-meta {{
@@ -311,7 +311,7 @@ def render_login_brand() -> None:
     """Display the branded login hero panel."""
     st.markdown(
         """
-        <div class="sq-login-logo">S</div>
+        <div class="sq-login-logo"></div>
         <div class="sq-brand-panel">
             <div class="sq-brand-meta">
                 <div class="sq-brand-kicker">Luxury sales command center</div>
