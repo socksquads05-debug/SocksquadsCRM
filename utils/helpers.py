@@ -55,6 +55,12 @@ class AuthenticationManager:
         Returns:
             Tuple of (success: bool, user_data: dict)
         """
+        if not username or not password:
+            return False, None
+
+        username = username.strip().lower()
+        password = password.strip()
+
         if username not in AuthenticationManager.CREDENTIALS:
             return False, None
         
