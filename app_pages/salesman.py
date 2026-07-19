@@ -33,6 +33,12 @@ def show():
     # Tabs for different sections
     tab1, tab2 = st.tabs(["📝 Submit Report", "📊 My Performance"])
     
+    # Apply any pending form clears before widgets are created
+    if '_pending_form_clear' in st.session_state:
+        pending = st.session_state.pop('_pending_form_clear')
+        for k, v in pending.items():
+            st.session_state[k] = v
+
     # Tab 1: Submit Report
     with tab1:
         st.subheader("Submit Today's Report")
@@ -155,8 +161,9 @@ def show():
                         if saved:
                             st.success("✓ Report submitted successfully and saved to Google Sheets!")
                             st.balloons()
-                            # Clear only the fields we populated
-                            for key, val in {
+                            # Schedule form clear on next run to avoid modifying widget-backed
+                            # session_state keys after widgets are instantiated.
+                            st.session_state['_pending_form_clear'] = {
                                 'retailer_name': '',
                                 'retailer_mobile': '',
                                 'area': '',
@@ -165,11 +172,10 @@ def show():
                                 'order_value': 0.0,
                                 'collection': 0.0,
                                 'outstanding': 0.0,
-                                'next_visit': datetime.now() + timedelta(days=7),
+                                'next_visit': (datetime.now() + timedelta(days=7)).date(),
                                 'remarks': ''
-                            }.items():
-                                st.session_state[key] = val
-                            # Rerun so cleared values are reflected in the form
+                            }
+                            # Rerun so the pending clear will be applied before widgets are created
                             st.experimental_rerun()
                         else:
                             st.error("Failed to save report to Google Sheets. Check the messages above for details and ensure the spreadsheet exists and the service account has write permission.")
