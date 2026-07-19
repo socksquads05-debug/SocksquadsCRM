@@ -31,7 +31,6 @@ from utils.charts import (
 
 def show():
     """Display the main dashboard."""
-    st.set_page_config(page_title="Dashboard", layout="wide")
     
     st.title("📊 SocksQuads CRM Dashboard")
     st.markdown("---")

@@ -17,7 +17,6 @@ from utils.helpers import (
 
 def show():
     """Display reports page."""
-    st.set_page_config(page_title="Reports", layout="wide")
     
     st.title("📊 Reports & Analytics")
     st.markdown("Generate and export sales reports in various formats.")

@@ -12,7 +12,6 @@ from utils.helpers import format_currency
 
 def show():
     """Display retailers management page."""
-    st.set_page_config(page_title="Retailers", layout="wide")
     
     st.title("🏪 Retailer Database")
     st.markdown("Manage and view all retailer information.")

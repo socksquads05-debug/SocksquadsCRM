@@ -23,7 +23,6 @@ from utils.charts import (
 
 def show():
     """Display analytics page."""
-    st.set_page_config(page_title="Analytics", layout="wide")
     
     st.title("📈 Advanced Analytics")
     st.markdown("Deep insights into sales performance and business trends.")

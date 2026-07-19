@@ -21,7 +21,6 @@ from utils.charts import (
 
 def show():
     """Display salesman page."""
-    st.set_page_config(page_title="Daily Sales Report", layout="wide")
     
     st.title("💼 Daily Sales Report")
     st.markdown("Submit your daily sales and collection data here.")
