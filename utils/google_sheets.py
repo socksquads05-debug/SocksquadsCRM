@@ -30,39 +30,51 @@ class GoogleSheetsConnector:
         self.sheet = None
         self._initialize_connection()
     
+    def _load_credentials(self, scope):
+        """Load Google credentials from Streamlit secrets or local file."""
+        try:
+            # Try Streamlit secrets first
+            if hasattr(st, 'secrets') and st.secrets is not None:
+                secret_creds = st.secrets.get('google_credentials')
+                if secret_creds:
+                    if isinstance(secret_creds, str):
+                        secret_creds = json.loads(secret_creds)
+                    if isinstance(secret_creds, dict):
+                        return Credentials.from_service_account_info(secret_creds, scopes=scope)
+
+            # Fallback to local credentials.json file
+            if os.path.exists(self.credentials_path):
+                return Credentials.from_service_account_file(self.credentials_path, scopes=scope)
+
+            return None
+        except Exception as e:
+            st.error(f"Unable to load Google credentials: {str(e)}")
+            return None
+
     def _initialize_connection(self):
         """Initialize connection to Google Sheets."""
         try:
-            if not os.path.exists(self.credentials_path):
-                st.error(f"Credentials file not found: {self.credentials_path}")
-                st.info("""
-                To use Google Sheets integration:
-                1. Go to Google Cloud Console
-                2. Create a service account
-                3. Download the JSON credentials file
-                4. Save it as 'credentials.json' in the project root
-                """)
-                return
-            
             # Define scope for Google Sheets and Drive
             scope = [
                 'https://www.googleapis.com/auth/spreadsheets',
                 'https://www.googleapis.com/auth/drive'
             ]
-            
-            # Authenticate
-            credentials = Credentials.from_service_account_file(
-                self.credentials_path, scopes=scope
-            )
+
+            credentials = self._load_credentials(scope)
+            if not credentials:
+                st.error("Google credentials are not configured. Please add them to Streamlit secrets or upload a local credentials.json file.")
+                st.info("To use Google Sheets integration:\n1. Add Google service account credentials to Streamlit secrets as 'google_credentials' or\n2. Save 'credentials.json' in the project root.")
+                return
+
             self.client = gspread.authorize(credentials)
-            
+
             # Try to open or create the sheet
             try:
                 self.sheet = self.client.open(self.sheet_name)
             except gspread.exceptions.SpreadsheetNotFound:
                 st.warning(f"Sheet '{self.sheet_name}' not found. Create it in Google Drive first.")
                 self.sheet = None
-                
+
         except Exception as e:
             st.error(f"Error initializing Google Sheets: {str(e)}")
             self.sheet = None
