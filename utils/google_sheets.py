@@ -14,6 +14,13 @@ import os
 
 from config import GOOGLE_SHEET_NAME, GOOGLE_SHEET_URL, GOOGLE_SPREADSHEET_ID
 
+# Expected headers for the Sales Reports worksheet. Kept in sync with save_sales_report
+SALES_REPORTS_HEADERS = [
+    'Date', 'Salesman', 'Retailer', 'Retailer Mobile', 'Area',
+    'City', 'Order Qty', 'Order Value', 'Collection', 'Outstanding',
+    'Next Visit', 'Remarks', 'Timestamp'
+]
+
 
 class GoogleSheetsConnector:
     """Manages connections and operations with Google Sheets."""
@@ -230,10 +237,28 @@ class GoogleSheetsConnector:
             if not worksheet:
                 return pd.DataFrame()
             
+            # Read existing values
             data = worksheet.get_all_values()
+
+            # If the sheet has no rows, return empty DataFrame
+            if len(data) == 0:
+                return pd.DataFrame()
+
+            # If the first row does not look like headers, insert the expected headers
+            first_row = data[0]
+            if not (set(['Date', 'Salesman']).issubset(set(first_row))):
+                try:
+                    worksheet.insert_rows([SALES_REPORTS_HEADERS], 1)
+                    # re-fetch data after inserting headers
+                    data = worksheet.get_all_values()
+                except Exception:
+                    # If we cannot insert headers (permissions), proceed with current rows
+                    pass
+
+            # If after ensuring headers there's only the header row, return empty DataFrame
             if len(data) <= 1:
                 return pd.DataFrame()
-            
+
             df = pd.DataFrame(data[1:], columns=data[0])
             return df
             
