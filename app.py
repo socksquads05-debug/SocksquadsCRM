@@ -3,10 +3,16 @@ SocksQuads CRM - Sales Dashboard
 Main application file with login and navigation
 """
 
+import logging
+import traceback
+
 import streamlit as st
 from utils.helpers import AuthenticationManager, initialize_session_state
 from pages import dashboard, salesman, retailers, reports, analytics
 
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
 
 # Page configuration
 st.set_page_config(
@@ -190,14 +196,21 @@ def main_app():
 
 def main():
     """Main entry point."""
-    # Initialize session state
-    initialize_session_state()
-    
-    # Check authentication
-    if not st.session_state.authenticated:
-        login_page()
-    else:
-        main_app()
+    try:
+        # Initialize session state
+        initialize_session_state()
+        
+        # Check authentication
+        if not st.session_state.authenticated:
+            login_page()
+        else:
+            main_app()
+    except Exception as exc:
+        logging.exception("Unhandled exception in app")
+        st.title("⚠️ Application Error")
+        st.error("A fatal error occurred while loading the application.")
+        st.write("Please check the deployment logs and verify your Streamlit secrets configuration.")
+        st.text(traceback.format_exc())
 
 
 if __name__ == "__main__":
