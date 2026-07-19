@@ -109,18 +109,7 @@ def login_page():
                     st.error("❌ Invalid username or password.")
         
         st.markdown("---")
-        st.markdown("""
-        ### Demo Credentials:
-        
-        **Admin Users:**
-        - Username: `admin` | Password: `admin123`
-        - Username: `owner` | Password: `owner123`
-        
-        **Salesmen:**
-        - Username: `raj` | Password: `raj123`
-        - Username: `priya` | Password: `priya123`
-        - Username: `amit` | Password: `amit123`
-        """)
+        st.info("For access, please contact your SockSquads administrator. Login credentials are not shown here for security reasons.")
 
 
 def main_app():
