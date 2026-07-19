@@ -8,7 +8,7 @@ import traceback
 
 import streamlit as st
 from utils.helpers import AuthenticationManager, initialize_session_state
-from pages import dashboard, salesman, retailers, reports, analytics
+from app_pages import dashboard, salesman, retailers, reports, analytics
 
 
 # Configure logging
